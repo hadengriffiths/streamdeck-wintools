@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsInput;
 using WinTools.Backend;
 using WinTools.Wrappers;
 
@@ -107,6 +108,7 @@ namespace WinTools
         private readonly System.Timers.Timer tmrRunLongPress = new System.Timers.Timer();
         private string pathTitle;
 
+        private readonly InputSimulator iis = new InputSimulator();
         private readonly PluginSettings settings;
         private GlobalSettings global;
         private TitleParameters titleParameters;
@@ -232,9 +234,9 @@ namespace WinTools
 
             if (settings.LockSelection)
             {
-                Logger.Instance.LogMessage(TracingLevel.WARN, $"Ignoring long keypress because Lock Selection is enabled");
-                await Connection.ShowAlert();
+                iis.Keyboard.TextEntry(settings.Path.Replace("/","\\") + "\\");
                 return;
+
             }
 
             settings.Path = await GetWindowsExplorerPath();
